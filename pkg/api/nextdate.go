@@ -70,6 +70,11 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 }
 
 func NextDateHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		log.Printf("API: Метод %s не разрешен для /api/nextdate", r.Method)
+		http.Error(w, "Метод не разрешен", http.StatusMethodNotAllowed)
+		return
+	}
 	nowParam := r.FormValue("now")
 	dateParam := r.FormValue("date")
 	repeatParam := r.FormValue("repeat")
