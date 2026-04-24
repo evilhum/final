@@ -11,7 +11,7 @@ func main() {
 	if err := db.Init(dbFile); err != nil {
 		panic(err)
 	}
-
+	defer db.DB.Close()
 	webRoot := "./web"
 	serverPort := ":7540"
 

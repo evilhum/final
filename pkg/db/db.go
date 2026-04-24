@@ -9,7 +9,7 @@ import (
 )
 
 var DB *sql.DB
-
+//у меня не получилось разобраться с тем как сделать глобальную переменную по-другому(
 const schema = `
 CREATE TABLE scheduler (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,6 +40,7 @@ func Init(dbFile string) error {
 
 	if install {
 		if _, err := DB.Exec(schema); err != nil {
+			DB.Close()
 			log.Printf("DB: Ошибка при установке схемы таблиц: %v", err)
 			return err
 		}

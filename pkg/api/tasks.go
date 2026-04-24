@@ -6,21 +6,28 @@ import (
 	"final/pkg/db"
 )
 
+const Limit = 50
+
 type TaskListResponse struct {
 	Tasks []db.Task `json:"tasks"`
 }
 
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
-	list, err := db.ListTasks(50)
+	if r.Method != http.MethodGet {
+		sendResponse(w, http.StatusMethodNotAllowed, map[string]string{"error": "Метод не разрешен"})
+		return
+	}
+
+	list, err := db.ListTasks(Limit)
 	if err != nil {
-		sendResponse(w, map[string]string{"error": "Не удалось загрузить список задач"})
+		sendResponse(w, http.StatusInternalServerError, map[string]string{"error": "Не удалось загрузить список задач"})
 		return
 	}
 	if list == nil {
-        list = []db.Task{}
-    }
-	sendResponse(w, TaskListResponse{
+		list = []db.Task{}
+	}
+
+	sendResponse(w, http.StatusOK, TaskListResponse{
 		Tasks: list,
 	})
 }
-

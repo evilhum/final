@@ -76,10 +76,8 @@ func NextDateHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("API: Запрос NextDate (now=%s, date=%s, repeat=%s)", nowParam, dateParam, repeatParam)
 
-	var now time.Time
-	if nowParam == "" {
-		now = time.Now()
-	} else {
+	now := time.Now()
+	if nowParam != "" {
 		var err error
 		now, err = time.Parse(TimeLayout, nowParam)
 		if err != nil {
@@ -97,5 +95,7 @@ func NextDateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte(res))
+	if _, err := w.Write([]byte(res)); err != nil {
+		log.Printf("API: Ошибка записи ответа: %v", err)
+	}
 }

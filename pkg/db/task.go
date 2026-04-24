@@ -58,6 +58,9 @@ func ListTasks(limit int) ([]Task, error) {
 		}
 		records = append(records, t)
 	}
+	if err := rows.Err(); err != nil {
+        return nil, err
+    } 
 	return records, nil
 }
 
